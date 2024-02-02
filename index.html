@@ -30,6 +30,13 @@
     </div>
 
     <div id="outputUrl"></div>
+    <hr>
+    <br>
+    <h1>Bookmarklets</h1>
+    <p>Drag these links to your bookmarks bar to create <a href="https://en.wikipedia.org/wiki/Bookmarklet">bookmarklets</a> that will open the current GitHub notebook in JupyterLite, Colab, or Callysto Hub.</p>
+    <p><a href='javascript:(()=>{var site=location.href.split("github.com/")[1].replace(/\/blob\//,"/"");var newUrl="https://callysto.github.io/jupyterlite/lab/index.html?fromURL=https://raw.githubusercontent.com/"+site;window.prompt("Open in JupyterLite Link",newUrl);})();''>Open in JupyterLite</a></p>
+    <p></p><a href='javascript:(function(){var url=location.href;var res=url.split("github.com/");var site=res[1];colabGitUrl="https://colab.research.google.com/github/"+site;window.prompt("Colab gitpuller link",colabGitUrl);})();'>Open in Colab</a></p>
+    <p></p><a href='javascript:(function(){var url=location.href;var res=url.split("/");var site=res[2];var user=res[3];var repo=res[4];var treeBlob=res[5];var branch=res[6];var nbgitputllerUrl="https://hub.callysto.ca/jupyter/hub/user-redirect/git-pull?repo=";if(site=="github.com"){if(treeBlob){var subPath=url.substring(url.indexOf(branch)+branch.length+1);nbgitputllerUrl+=encodeURIComponent("https://github.com/"+user+"/")+repo+"&branch="+branch+"&subPath="+subPath+"&depth=1";}else{nbgitputllerUrl+=url;}}window.prompt("Callysto nbgitpuller link",nbgitputllerUrl);})();'>Open in Callysto Hub</a></p>
 
     <script>
         document.getElementById('jupyterliteButton').addEventListener('click', openInJupyterLite);
