@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open in Jupyter Link Generators</title>
+    <style>
+        body {background-color: #FFFFFF;}
+        h1 {color: #F26722;}
+        button {background-color: #6F4A9E; color: #FFFFFF; cursor: pointer;}
+        link {color: #5f68B0;}
+        #inputs {margin-bottom: 10px;}
+        #buttons {margin-bottom: 10px;}
+        #outputUrl {margin-bottom: 10px;}
+
+    </style>
+</head>
+<body>
+    <h1>Open in Jupyter Link Generators</h1>
+
+    <div id="inputs">
+        <input type="hidden" id="serverUrl" size="70" placeholder="https://callysto.github.io/jupyterlite/lab/index.html">
+        <input type="text" id="notebookUrl" size="100" placeholder="notebook URL from GitHub">
+    </div>
+
+    <div id="buttons">
+        <button id="jupyterliteButton">Open in JupyterLite</button>
+        <button id="colabButton">Open in Colab</button>
+        <button id="callystoButton">Open in Callysto Hub</button>
+    </div>
+
+    <div id="outputUrl"></div>
+
+    <script>
+        document.getElementById('jupyterliteButton').addEventListener('click', openInJupyterLite);
+        function openInJupyterLite() {
+            let serverUrl = document.getElementById('serverUrl').value;
+            if (serverUrl === '') {
+                serverUrl = 'https://callysto.github.io/jupyterlite/lab/index.html';
+            }
+            let notebookUrl = document.getElementById('notebookUrl').value;
+            notebookUrl = "https://raw.githubusercontent.com/" + notebookUrl.trim().split("github.com/")[1].replace(/\/blob\//,'/');
+            const jupyterLiteUrl = serverUrl + '?fromURL=' + notebookUrl;
+            document.getElementById('outputUrl').innerHTML = '<a href="'+jupyterLiteUrl+'" target="_blank">'+jupyterLiteUrl+'</a>';
+        }
+        
+        document.getElementById('colabButton').addEventListener('click', openInColab);
+        function openInColab() {
+            //                       https://github.com/callysto/hackathon/blob/master/HackathonNotebooks/data.ipynb
+            // https://colab.research.google.com/github/callysto/hackathon/blob/master/HackathonNotebooks/data.ipynb
+            let notebookUrl = document.getElementById('notebookUrl').value;
+            notebookUrl = notebookUrl.trim().split("github.com/")[1];
+            const colabUrl = 'https://colab.research.google.com/github/'+notebookUrl;
+            document.getElementById('outputUrl').innerHTML = '<a href="'+colabUrl+'" target="_blank">'+colabUrl+'</a>';
+        }
+        
+        document.getElementById('callystoButton').addEventListener('click', openInCallysto);
+        function openInCallysto() {
+            let notebookUrl = document.getElementById('notebookUrl').value;
+            let res = notebookUrl.split("/");
+            let site = res[2];
+            let user = res[3];
+            let repo = res[4];
+            let treeBlob = res[5];
+            let branch = res[6];
+            let callystoUrl = "https://hub.callysto.ca/jupyter/hub/user-redirect/git-pull?repo=";
+            if (site == "github.com") {
+                if (treeBlob) {
+                    let subPath = notebookUrl.substring(notebookUrl.indexOf(branch)+branch.length+1);
+                    callystoUrl += encodeURIComponent("https://github.com/"+user+"/")+repo+"&branch="+branch+"&subPath="+subPath+"&depth=1";
+                } else {
+                    callystoUrl += notebookUrl;
+                }
+            document.getElementById('outputUrl').innerHTML = '<a href="'+callystoUrl+'" target="_blank">'+callystoUrl+'</a>';
+            }
+        }
+    </script>
+</body>
+</html>
